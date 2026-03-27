@@ -1,0 +1,14 @@
+# 4 MB layout: two OTA app slots + a dedicated NVS partition for the offline ring.
+#
+# The ring needs real space: 1 record/s for 90 min at 72 B/record is ~390 KB,
+# which the default 24 KB nvs partition cannot hold. Keeping it in its own
+# partition also means a factory reset of the system NVS does not wipe the
+# buffered measurements.
+#
+# Name,     Type, SubType,  Offset,   Size,     Flags
+nvs,        data, nvs,      0x9000,   0x6000,
+otadata,    data, ota,      0xf000,   0x2000,
+phy_init,   data, phy,      0x11000,  0x1000,
+ota_0,      app,  ota_0,    0x20000,  0x1C0000,
+ota_1,      app,  ota_1,    0x1E0000, 0x1C0000,
+storage,    data, nvs,      0x3A0000, 0x60000,
