@@ -1,0 +1,35 @@
+menu "Modbus Gateway"
+
+    config GW_DEVICE_ID
+        string "Device ID (MQTT client id / topic prefix)"
+        default "gw-0001"
+
+    config GW_MQTT_URI
+        string "MQTT broker URI"
+        default "mqtts://broker.example.com:8883"
+
+    config GW_MQTT_USER
+        string "MQTT username"
+        default "gateway"
+
+    config GW_OTA_URL
+        string "Firmware OTA URL (empty disables OTA)"
+        default ""
+
+    config GW_POLL_SLOT_MS
+        int "Polling slot per slave (ms)"
+        default 125
+        help
+            One slot per slave. 8 slaves x 125 ms = 1 s per full round.
+
+    config GW_SLAVE_COUNT
+        int "Number of RS485 slaves"
+        default 8
+        range 1 8
+
+    config GW_REG_COUNT
+        int "Holding registers read per slave"
+        default 4
+        range 1 8
+
+endmenu
