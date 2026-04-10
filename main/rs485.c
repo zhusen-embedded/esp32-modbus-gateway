@@ -18,19 +18,21 @@ void rs485_init(void)
         .source_clk = UART_SCLK_DEFAULT,
     };
 
-    uart_driver_install(RS485_UART, 512, 512, 0, NULL, 0);
-    uart_param_config(RS485_UART, &cfg);
-    uart_set_pin(RS485_UART, RS485_TXD, RS485_RXD, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    ESP_ERROR_CHECK(uart_driver_install(RS485_UART, 512, 512, 0, NULL, 0));
+    ESP_ERROR_CHECK(uart_param_config(RS485_UART, &cfg));
+    ESP_ERROR_CHECK(uart_set_pin(RS485_UART, RS485_TXD, RS485_RXD,
+                                 UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
     /* DE 引脚手动控制：发完立刻拉低会截断最后一个字节，
      * 要等 UART 移位寄存器真正空掉，用 uart_wait_tx_done 保证。 */
     gpio_config_t io = {
         .pin_bit_mask = 1ULL << RS485_DE,
         .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = 0, .pull_down_en = 0,
+        .pull_up_en = 0,
+        .pull_down_en = 0,
         .intr_type = GPIO_INTR_DISABLE,
     };
-    gpio_config(&io);
+    ESP_ERROR_CHECK(gpio_config(&io));
     gpio_set_level(RS485_DE, 0);
 
     ESP_LOGI(TAG, "uart1 ready, %d 8N1, DE=GPIO%d", RS485_BAUD, RS485_DE);
